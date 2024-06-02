@@ -1,10 +1,17 @@
 
-import GroceryList from './GroceryList';
+// import Customers from './Customers';
+
+// import CustomerDetails from "./CustomerDetails";
+
+// import NewCustomer from "./NewCustomer";
 
 function App() {
   return (
     <div className="App">
-    <GroceryList/>
+      <main/>
+    {/* <Customers/> */}
+    {/* <NewCustomer/> */}
+    {/* <CustomerDetails/> */}
     </div>
   );
 }
