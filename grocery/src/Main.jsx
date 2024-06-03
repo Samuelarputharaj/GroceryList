@@ -92,8 +92,8 @@ const Customers = () => {
     );
 };
 
-const App = () => {
-    const [page, setPage] = useState('new-customer');
+const Main = () => {
+    const [page, setPage] = useState();
 
     const handlePageChange = (newPage) => {
         setPage(newPage);
@@ -111,4 +111,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default Main;

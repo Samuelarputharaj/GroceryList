@@ -1,17 +1,22 @@
 
 // import Customers from './Customers';
 
-// import CustomerDetails from "./CustomerDetails";
+// import BillPage from "./BillPage";
+
+// import Main from "./Main";
+
+import CustomerDetails from "./CustomerDetails";
 
 // import NewCustomer from "./NewCustomer";
 
 function App() {
   return (
     <div className="App">
-      <main/>
+      {/* <BillPage /> */}
+      {/* <Main/> */}
     {/* <Customers/> */}
     {/* <NewCustomer/> */}
-    {/* <CustomerDetails/> */}
+    <CustomerDetails/>
     </div>
   );
 }

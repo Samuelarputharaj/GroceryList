@@ -4,15 +4,19 @@ import './Customers.css';
 
 function Customers() {
   const [customers, setCustomers] = useState([]);
-  const [newCustomer, setNewCustomer] = useState({ mobile: '', name: '', since: new Date() });
+  const [newCustomer, setNewCustomer] = useState({ mobile: '', name: '' });
+
   useEffect(() => {
     fetchCustomers();
   }, []);
 
-  const fetchCustomers = () => {
-    axios.get('http://localhost:5000/customers')
-      .then(response => setCustomers(response.data))
-      .catch(error => console.error('There was an error!', error));
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/customers');
+      setCustomers(response.data);
+    } catch (error) {
+      console.error('There was an error fetching customers:', error);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -20,15 +24,40 @@ function Customers() {
     setNewCustomer({ ...newCustomer, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post('http://localhost:5000/customers', newCustomer)
-      .then(response => {
-        console.log('Customer added:', response.data);
-        fetchCustomers(); // Update the list of customers after adding a new one
-        setNewCustomer({ mobile: '', name: '', since: new Date() }); // Clear the form fields
-      })
-      .catch(error => console.error('There was an error!', error));
+    try {
+      await axios.post('http://localhost:5000/api/customers', newCustomer);
+      console.log('Customer added successfully');
+      fetchCustomers(); // Refresh the customer list
+      setNewCustomer({ mobile: '', name: '' }); // Clear form fields
+    } catch (error) {
+      console.error('Error adding customer:', error);
+    }
+  };
+
+  const handleDeleteCustomer = async (mobile) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/customers/${mobile}`);
+      console.log('Customer deleted successfully');
+      fetchCustomers(); // Refresh the customer list
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+    }
+  };
+
+  const handleEditCustomer = async (editIdx) => {
+    // Handling edit functionality goes here
+    let updatedContent = prompt("Enter the new name for the customer");
+    if (updatedContent !== null) {
+      try {
+        await axios.put(`http://localhost:5000/api/customers/${customers[editIdx].mobile}`, { name: updatedContent });
+        console.log('Customer updated successfully');
+        fetchCustomers(); // Refresh the customer list
+      } catch (error) {
+        console.error('Error updating customer:', error);
+      }
+    }
   };
 
   return (
@@ -49,6 +78,7 @@ function Customers() {
             <th>Mobile</th>
             <th>Name</th>
             <th>Since</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -58,6 +88,10 @@ function Customers() {
               <td>{customer.mobile}</td>
               <td>{customer.name}</td>
               <td>{new Date(customer.since).toLocaleDateString()}</td>
+              <td>
+                <button onClick={() => handleDeleteCustomer(customer.mobile)}>Delete</button>
+                <button onClick={() => handleEditCustomer(index)}>Edit</button>
+              </td>
             </tr>
           ))}
         </tbody>
